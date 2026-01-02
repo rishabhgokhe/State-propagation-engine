@@ -1,4 +1,4 @@
-# Real-time State Propagation Engine
+# State Propagation Engine
 
 An experimental engine exploring how state transitions propagate across dependent systems under real-time constraints.
 
