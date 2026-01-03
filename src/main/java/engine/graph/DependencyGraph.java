@@ -1,32 +1,17 @@
-package engine.graph;
+import engine.graph.CycleDetector;
 
-import java.util.HashMap;
-import java.util.Map;
+public void connect(String sourceId, String targetId) {
+    StateNode<T> source = nodes.get(sourceId);
+    StateNode<T> target = nodes.get(targetId);
 
-public class DependencyGraph<T> {
-
-    private final Map<String, StateNode<T>> nodes;
-
-    public DependencyGraph() {
-        this.nodes = new HashMap<>();
+    if (source == null || target == null) {
+        throw new IllegalArgumentException("Invalid node reference");
     }
 
-    public void register(StateNode<T> node) {
-        nodes.put(node.getId(), node);
-    }
+    source.addDependent(target);
 
-    public void connect(String sourceId, String targetId) {
-        StateNode<T> source = nodes.get(sourceId);
-        StateNode<T> target = nodes.get(targetId);
-
-        if (source == null || target == null) {
-            throw new IllegalArgumentException("Invalid node reference");
-        }
-
-        source.addDependent(target);
-    }
-
-    public StateNode<T> getNode(String id) {
-        return nodes.get(id);
+    CycleDetector<T> detector = new CycleDetector<>();
+    if (detector.hasCycle(source)) {
+        throw new IllegalStateException("Cycle detected in dependency graph");
     }
 }
